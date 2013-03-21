@@ -4,8 +4,8 @@ import Keys._
 object BlueEyesBuild extends Build {
   val nexusSettings : Seq[Project.Setting[_]] = Seq(
     resolvers ++= Seq(
-      "ReportGrid repo (public)"          at "http://nexus.reportgrid.com/content/repositories/public-releases",
-      "ReportGrid snapshot repo (public)" at "http://nexus.reportgrid.com/content/repositories/public-snapshots",
+//      "ReportGrid repo (public)"          at "http://nexus.reportgrid.com/content/repositories/public-releases",
+//      "ReportGrid snapshot repo (public)" at "http://nexus.reportgrid.com/content/repositories/public-snapshots",
       "Sonatype Jetty"                    at "https://oss.sonatype.org/content/groups/jetty/",
       "Typesafe Repository"               at "http://repo.typesafe.com/typesafe/releases/",
       "Sonatype Releases"                 at "http://oss.sonatype.org/content/repositories/releases",
@@ -54,18 +54,21 @@ object BlueEyesBuild extends Build {
       </developers>,
 
     publishTo <<= version { v: String =>
-      val nexus = "https://oss.sonatype.org/"
+      val repo = "http://artifacts.livingsocial.net/artifactory/"
       if (v.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "content/repositories/snapshots")
+        Some("snapshots" at repo + "libs-ivy-snapshot-local")
       else
-        Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    },
+        Some("release" at repo + "libs-ivy-release-local")
+    }
+    ,
 
-    crossScalaVersions := Seq("2.9.1", "2.9.2"),
+    scalaVersion := "2.9.2",
 
-    version := "0.6.1-SNAPSHOT",
+    crossScalaVersions := Seq("2.9.2"),
 
-    organization := "com.github.jdegoes",
+    version := "0.6.2-SNAPSHOT",
+
+    organization := "com.reportgrid",
 
     scalacOptions ++= Seq("-deprecation", "-unchecked")
   )

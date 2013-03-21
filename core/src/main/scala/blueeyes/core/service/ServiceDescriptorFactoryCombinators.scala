@@ -34,6 +34,7 @@ import akka.actor.PoisonPill
 import akka.dispatch.Future
 import akka.dispatch.Promise
 import akka.util.Timeout
+import collection.mutable.{SynchronizedSet, HashSet}
 
 trait ServiceDescriptorFactoryCombinators extends HttpRequestHandlerCombinators with RestPathPatternImplicits with AkkaDefaults with blueeyes.json.Implicits {
 //  private[this] object TransformerCombinators
