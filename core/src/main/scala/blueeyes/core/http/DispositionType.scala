@@ -12,7 +12,7 @@ sealed trait DispositionType extends ProductPrefixUnmangler{
   def creationDate: Option[HttpDateTime]
   def size: Option[Int]
 
-  def value = (dispType.toList ++ fileName.map("fileame=" + _).toList ++ 
+  def value = (dispType :: fileName.map("fileame=" + _).toList ++
               creationDate.map("creation-date=" + _.toString).toList ++ size.map("size=" + _.toString).toList).mkString(";")
   override def toString = value
 }
@@ -20,12 +20,17 @@ sealed trait DispositionType extends ProductPrefixUnmangler{
 object DispositionTypes {
 
   def parseDispositionTypes(inString: String): DispositionType = {
-    def splitStr = inString.toLowerCase.split(";")
-    def disBuild = new DispositionTypeBuilder(splitStr(0))
+    val splitStr = inString.toLowerCase.split(";")
+    val disBuild = new DispositionTypeBuilder(splitStr(0))
     if (splitStr.length > 1) {
-      disBuild.filename = Some(splitStr(1))
+      disBuild.filename = {
+        val params = splitStr(1).split("=")
+        if (params.length > 1)
+          Some(params(1))
+        else None
+      }
     }
-    return disBuild.buildType
+    disBuild.buildType
   }
 
   case class inline (fileName: Option[String], creationDate: Option[HttpDateTime], size: Option[Int]) extends DispositionType

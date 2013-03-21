@@ -116,7 +116,7 @@ class StageSpec extends Specification with AkkaDefaults {
       futures.value must eventually(200, 300.milliseconds) (beSome)
 
       val flushFuture = stage.flushAll(timeout)
-      flushFuture.value must eventually (beSome)
+      flushFuture.value must eventually (not(beNone))
 
       collected mustEqual(messagesCount * threadsCount)
 
@@ -151,7 +151,7 @@ class StageSpec extends Specification with AkkaDefaults {
       (futures.value must eventually(500, 300.milliseconds) (beSome))
 
       val flushFuture = stage.flushAll(timeout)
-      (flushFuture.value must eventually (beSome))
+      (flushFuture.value must eventually (not(beNone)))
 
       collected mustEqual(Map[String, Int](messages.distinct.map(v => (v(0), threadsPerMessagesType * messagesCount)): _*))
 

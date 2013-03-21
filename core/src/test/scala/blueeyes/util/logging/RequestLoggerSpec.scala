@@ -41,7 +41,7 @@ class RequestLoggerSpec extends Specification with AfterExample{
       w3Logger("bar")
 
       val future = w3Logger.close(Timeout(5000))
-      future.value must eventually (beSome)
+      future.value must eventually (not(beNone))
 
       val content = getContents(new File(w3Logger.fileName.get))
 
@@ -65,7 +65,7 @@ class RequestLoggerSpec extends Specification with AfterExample{
 
   def cleanUp(){
     val future = w3Logger.close(Timeout(5000))
-    future.value must eventually (beSome)
+    future.value must eventually (not(beNone))
 
     new File(w3Logger.fileName.get).delete
   }
