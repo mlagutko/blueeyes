@@ -34,7 +34,7 @@ trait FutureMatchers extends AkkaConversions {
 
   case class whenDelivered[A](matcher: Matcher[A])(implicit timeouts: FutureTimeouts) extends Matcher[Future[A]] with Expectations {
     def apply[B <: Future[A]](expectable: Expectable[B]): MatchResult[B] = {
-      val (ok, okMessage, koMessage) = retry(expectable.evaluate.value, timeouts.retries, timeouts.retries)
+      val (ok, okMessage, koMessage) = retry(expectable.evaluateOnce.value, timeouts.retries, timeouts.retries)
       result(ok, okMessage, koMessage, expectable)
     }
 
