@@ -12,7 +12,7 @@ sealed trait DispositionType extends ProductPrefixUnmangler{
   def creationDate: Option[HttpDateTime]
   def size: Option[Int]
 
-  def value = (dispType :: fileName.map(" fileame=" + _).toList ++
+  def value = (dispType :: fileName.map(" filename=" + _).toList ++
               creationDate.map(" creation-date=" + _.toString).toList ++ size.map(" size=" + _.toString).toList).mkString(";")
   override def toString = value
 }

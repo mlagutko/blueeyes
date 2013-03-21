@@ -36,7 +36,7 @@ class HttpHeadersSpec extends Specification{
   "Content-Disposition" should{
     "parse header" in {
       val contentDisposition = HttpHeader("Content-Disposition" -> ("attachment; filename=response_of_1.csv"))
-      contentDisposition.toString must_==("Content-Disposition: attachment; fileame=response_of_1.csv")
+      contentDisposition.toString must_==("Content-Disposition: attachment; filename=response_of_1.csv")
     }
   }
 
