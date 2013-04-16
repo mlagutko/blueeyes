@@ -59,11 +59,15 @@ trait ServiceDescriptorFactoryCombinators extends HttpRequestHandlerCombinators 
 
   def healthMonitor[T, S](shutdownTimeout: Timeout, config: Seq[IntervalConfig] = defaultHealthMonitorConfig)(f: HealthMonitor => ServiceDescriptorFactory[T, S])(implicit jValueBijection: Bijection[JValue, T]): ServiceDescriptorFactory[T, S] = {
     (context: ServiceContext) => {
-      val intervals = context.config.detach("healthMonitor").get[List[String]]("intervals").map( _.map(IntervalParser.parse(_))).getOrElse(config).toList
-      val monitor: HealthMonitor = new CompositeHealthMonitor(intervals match {
-        case x :: xs => intervals
-        case Nil => config.toList
-      })
+      val monitorConfig          = context.config.detach("healthMonitor")
+      val monitor: HealthMonitor = if (monitorConfig[Boolean]("enableRequestMonitor", true)){
+        val intervals = monitorConfig.get[List[String]]("intervals").map( _.map(IntervalParser.parse(_))).getOrElse(config).toList
+        new CompositeHealthMonitor(intervals match {
+          case x :: xs => intervals
+          case Nil => config.toList
+        })
+      }
+      else HealthMonitor.Noop
 
       implicit val stop: Stop[HealthMonitor] = HealthMonitor.stop(shutdownTimeout)
       val underlying = f(monitor)(context)

@@ -66,7 +66,7 @@ object BlueEyesBuild extends Build {
 
     crossScalaVersions := Seq("2.9.2"),
 
-    version := "0.6.2-SNAPSHOT",
+    version := "0.6.4-SNAPSHOT",
 
     organization := "com.reportgrid",
 
